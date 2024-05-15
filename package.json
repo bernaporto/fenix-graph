@@ -17,6 +17,9 @@
     "build:dev": "yarn --ignore-scripts vite build --mode development",
     "prepare": "husky"
   },
+  "dependencies": {
+    "@bernaporto/fenix-store": "git+https://github.com/bernaporto/fenix-store.git"
+  },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
     "@types/jest": "^29.5.12",
