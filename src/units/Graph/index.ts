@@ -1,1 +1,1 @@
-export type { TGraph, TGraphController } from './types';
+export type { TGraphController } from './types';

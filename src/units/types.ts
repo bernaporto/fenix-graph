@@ -6,7 +6,11 @@ export type TUnitSchema = {
   type: string;
 };
 
-export type TUnitController<T extends TUnit> = {
+export type TUnitController<T extends TUnit = TUnit> = T & {
   dispose: VoidFunction;
-  value: T;
+};
+
+export type TUnitList<T, U> = {
+  add: (schema: T) => U;
+  remove: (id: string) => void;
 };

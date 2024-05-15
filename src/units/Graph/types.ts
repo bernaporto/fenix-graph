@@ -1,10 +1,8 @@
-import type { TLink } from '@/units/Link';
-import type { TNode } from '@/units/Node';
-import type { TUnit, TUnitController } from '@/units/types';
+import type { TLinkController, TLinkSchema } from '@/units/Link';
+import type { TNodeController, TNodeSchema } from '@/units/Node';
+import type { TUnitController, TUnitList } from '@/units/types';
 
-export type TGraph = TUnit & {
-  nodes: TNode[];
-  links: TLink[];
+export type TGraphController = TUnitController & {
+  nodes: TUnitList<TNodeSchema, TNodeController>;
+  links: TUnitList<TLinkSchema, TLinkController>;
 };
-
-export type TGraphController = TUnitController<TGraph>;
