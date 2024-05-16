@@ -1,2 +1,2 @@
 export { Port } from './Port';
-export type { TPortSchema, TPortSnapshot } from './types';
+export type { TPortController, TPortSchema, TPortSnapshot } from './types';

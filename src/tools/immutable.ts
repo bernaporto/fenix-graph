@@ -1,11 +1,8 @@
-type ImmutableArray<T> = ReadonlyArray<Immutable<T>>;
-type ImmutableObject<T> = {
-  readonly [K in keyof T]: Immutable<T[K]>;
-};
-export type Immutable<T> = T extends (infer U)[]
-  ? ImmutableArray<U>
-  : T extends object
-    ? ImmutableObject<T>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Immutable<T> = T extends (...args: any[]) => any
+  ? T
+  : T extends Record<string, unknown>
+    ? { readonly [K in keyof T]: Immutable<T[K]> }
     : Readonly<T>;
 
 export const immutable = <T>(value: T): Immutable<T> => {

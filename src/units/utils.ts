@@ -11,9 +11,11 @@ export const getUnitStore = <T extends TUnknownObject>(
   store: TGraphStore,
   items: TStoreItemConfig<T>[],
 ): TUnitStore<T> => {
-  return items.reduce((acc, { parameter, basePath }) => {
+  const _store = items.reduce((acc, { parameter, basePath }) => {
     acc[parameter] = store.on(StorePath.join(basePath, parameter as string));
 
     return acc;
   }, Object.create(null));
+
+  return Object.freeze(_store);
 };

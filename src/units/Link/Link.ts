@@ -18,24 +18,15 @@ const factory = ({
 }: TLinkFactoryConfig): TLinkController => {
   const _store = getUnitStore<TLinkState>(store, [
     {
-      parameter: 'points',
+      parameter: 'payload',
       basePath: StorePath.links(id),
     },
   ]);
 
   return Object.freeze({
     id,
-
+    schema: Object.freeze(structuredClone(schema)),
     store: _store,
-
-    snapshot: () => {
-      return Object.freeze({
-        id,
-        schema,
-        state: {},
-      });
-    },
-
     dispose: () => {
       onDispose?.();
     },
@@ -64,7 +55,20 @@ const fromSnapshot = (
   });
 };
 
+const toSnapshot = (controller: TLinkController): TLinkSnapshot => {
+  const { id, schema, store } = controller;
+
+  return {
+    id,
+    schema,
+    state: {
+      payload: store.payload.get(),
+    },
+  };
+};
+
 export const Link = {
   create,
   fromSnapshot,
+  toSnapshot,
 };

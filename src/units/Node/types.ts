@@ -1,5 +1,5 @@
 import type { TPoint, TUnknownObject } from '@/types';
-import type { TPortSchema, TPortSnapshot } from '@/units/Port';
+import type { TPortController, TPortSchema, TPortSnapshot } from '@/units/Port';
 import type {
   TUnitConfig,
   TUnitController,
@@ -23,5 +23,7 @@ type TNodeSnapshotState = TNodeState & { ports: TPortSnapshot[] };
 
 export type TNodeConfig = TUnitConfig<TNodeSchema>;
 export type TNodeSnapshot = TUnitSnapshot<TNodeSchema, TNodeSnapshotState>;
-export type TNodeController = TUnitController<TNodeSnapshot, TNodeState>;
+export type TNodeController = TUnitController<TNodeSchema, TNodeState> & {
+  ports: TPortController[];
+};
 export type TNodeStore = TUnitStore<TNodeState>;

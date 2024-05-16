@@ -14,5 +14,4 @@ export type TGraphController = {
   nodes: TList<TNodeSchema, TNodeController>;
 } & {
   tree: (rootId: string) => TVirtualTree<TNodeSnapshot> | null;
-  snapshot: () => TGraphSnapshot;
 };

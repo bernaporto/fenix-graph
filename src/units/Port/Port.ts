@@ -28,21 +28,8 @@ const create = (config: TPortConfig): TPortController => {
 
   return Object.freeze({
     id,
-
+    schema: Object.freeze(structuredClone(schema)),
     store: _store,
-
-    snapshot: () => {
-      return Object.freeze({
-        id,
-        schema,
-        state: {
-          connected: _store.connected.get(),
-          links: _store.links.get() as string[],
-          offset: _store.offset.get(),
-        },
-      });
-    },
-
     dispose: () => {},
   });
 };
@@ -61,7 +48,22 @@ const fromSnapshot = (
   return create({ ...config, schema });
 };
 
+const toSnapshot = (controller: TPortController): TPortSnapshot => {
+  const { id, schema, store } = controller;
+
+  return {
+    id,
+    schema,
+    state: {
+      connected: store.connected.get(),
+      links: store.links.get() as string[],
+      offset: store.offset.get(),
+    },
+  };
+};
+
 export const Port = {
   create,
   fromSnapshot,
+  toSnapshot,
 };

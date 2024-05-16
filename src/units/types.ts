@@ -7,6 +7,7 @@ export type TUnitStore<T extends TUnknownObject = TUnknownObject> = {
 };
 
 export type TUnitSchema = TUnknownObject;
+type TUnitState = TUnknownObject;
 
 export type TUnitSnapshot<
   T extends TUnitSchema = TUnitSchema,
@@ -23,13 +24,10 @@ export type TUnitConfig<T extends TUnitSchema = TUnitSchema> = {
 };
 
 export type TUnitController<
-  T extends TUnitSnapshot = TUnitSnapshot,
-  U extends TUnknownObject = TUnknownObject,
-> = WithId<
-  {
-    dispose: VoidFunction;
-    store: TUnitStore<U>;
-  } & {
-    snapshot: () => T;
-  }
->;
+  T extends TUnitSchema = TUnitSchema,
+  U extends TUnitState = TUnitState,
+> = WithId<{
+  dispose: VoidFunction;
+  schema: T;
+  store: TUnitStore<U>;
+}>;

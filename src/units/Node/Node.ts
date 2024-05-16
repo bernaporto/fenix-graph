@@ -36,18 +36,8 @@ const factory = ({
   return Object.freeze({
     id,
     ports,
+    schema: Object.freeze(structuredClone(schema)),
     store: _store,
-    snapshot: () => {
-      return Object.freeze({
-        id,
-        schema,
-        state: {
-          payload: _store.payload.get(),
-          position: _store.position.get(),
-          ports: ports.map((port) => port.snapshot()),
-        },
-      });
-    },
     dispose: () => {
       onDispose?.();
     },
@@ -92,7 +82,22 @@ const fromSnapshot = (
   });
 };
 
+const toSnapshot = (controller: TNodeController): TNodeSnapshot => {
+  const { id, schema, store } = controller;
+
+  return {
+    id,
+    schema,
+    state: {
+      payload: store.payload.get(),
+      position: store.position.get(),
+      ports: controller.ports.map(Port.toSnapshot),
+    },
+  };
+};
+
 export const Node = {
   create,
   fromSnapshot,
+  toSnapshot,
 };

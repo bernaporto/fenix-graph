@@ -24,11 +24,6 @@ const factory = ({
     nodes.clear();
   },
 
-  snapshot: () => ({
-    nodes: Array.from(nodes.values()).map((node) => node.snapshot()),
-    links: Array.from(links.values()).map((link) => link.snapshot()),
-  }),
-
   tree: (rootId) => {
     const root = nodes.get(rootId);
 
@@ -36,7 +31,8 @@ const factory = ({
       return null;
     }
 
-    return VirtualTree.create(root.snapshot(), () => []);
+    // TODO: Implement proper tree configuration
+    return VirtualTree.create(Node.toSnapshot(root), () => []);
   },
 
   links: {
@@ -123,7 +119,17 @@ const fromSnapshot = (snapshot: TGraphSnapshot): TGraphController => {
   return factory({ links, nodes, store });
 };
 
+const toSnapshot = (controller: TGraphController): TGraphSnapshot => {
+  const { nodes, links } = controller;
+
+  return {
+    links: links.list().map(Link.toSnapshot),
+    nodes: nodes.list().map(Node.toSnapshot),
+  };
+};
+
 export const Graph = {
   create,
   fromSnapshot,
+  toSnapshot,
 };

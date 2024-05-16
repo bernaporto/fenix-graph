@@ -92,10 +92,10 @@ export const initGraph = () => {
     },
   });
 
-  const state = Graph.toState(graph);
-  console.log('Graph.toState', state);
+  const snapshot = Graph.toSnapshot(graph);
+  console.log('Graph.toState', snapshot);
 
-  const newGraph = Graph.fromState(state);
+  const newGraph = Graph.fromSnapshot(snapshot);
   console.log('Graph.fromState', newGraph);
 
   // console.log(graph.tree(output.id));

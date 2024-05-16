@@ -1,4 +1,4 @@
-import type { TPoint } from '@/types';
+import type { TUnknownObject } from '@/types';
 import type {
   TUnitConfig,
   TUnitController,
@@ -17,10 +17,10 @@ export type TLinkSchema = {
 };
 
 export type TLinkState = {
-  points: TPoint[];
+  payload: TUnknownObject;
 };
 
 export type TLinkConfig = TUnitConfig<TLinkSchema>;
 export type TLinkSnapshot = TUnitSnapshot<TLinkSchema>;
-export type TLinkController = TUnitController<TLinkSnapshot, TLinkState>;
+export type TLinkController = TUnitController<TLinkSchema, TLinkState>;
 export type TLinkStore = TUnitStore<TLinkState>;

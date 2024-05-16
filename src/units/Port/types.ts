@@ -23,5 +23,5 @@ export type TPortState = {
 export type TPortConfig = Omit<TUnitConfig<TPortSchema>, 'onDispose'> & {
   nodeId: string;
 };
-export type TPortController = TUnitController<TPortSnapshot, TPortState>;
+export type TPortController = TUnitController<TPortSchema, TPortState>;
 export type TPortSnapshot = TUnitSnapshot<TPortSchema, TPortState>;
