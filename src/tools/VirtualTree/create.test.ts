@@ -33,8 +33,8 @@ const getChildren = (node: TTestType) =>
 
 export const makeTestTree = () => create(list[0], getChildren);
 
-describe('NodeTree.create', () => {
-  it('should create a node tree', () => {
+describe('VirtualTree.create', () => {
+  it('should create a virtual node tree', () => {
     const tree = makeTestTree();
 
     expect(tree).toBeDefined();
@@ -64,7 +64,7 @@ describe('NodeTree.create', () => {
   });
 });
 
-describe('TNodeTree.get', () => {
+describe('TVirtualTree.get', () => {
   it('should return a node by id', () => {
     const tree = makeTestTree();
 

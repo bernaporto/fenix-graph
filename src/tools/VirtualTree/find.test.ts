@@ -1,6 +1,6 @@
 import { makeTestTree } from './create.test';
 
-describe('TNodeTree.find', () => {
+describe('TVirtualTree.find', () => {
   it('should find a node', () => {
     const tree = makeTestTree();
 

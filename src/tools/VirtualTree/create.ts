@@ -1,15 +1,20 @@
 import { find } from './find';
 import { traverse } from './traverse';
-import type { TNode, TNodeId, TNodeTree, TNodeValue } from './types';
+import type {
+  TVirtualNode,
+  TVirtualNodeId,
+  TVirtualTree,
+  TBaseNodeValue,
+} from './types';
 
-export const create = <T extends TNodeValue>(
+export const create = <T extends TBaseNodeValue>(
   rootValue: T,
   getChildren: (node: T) => T[],
-): TNodeTree<T> => {
-  const nodes = new Map<TNodeId, TNode<T>>();
+): TVirtualTree<T> => {
+  const nodes = new Map<TVirtualNodeId, TVirtualNode<T>>();
 
-  const createNode = (value: T, parent: TNode<T> | null) => {
-    const node: TNode<T> = {
+  const createNode = (value: T, parent: TVirtualNode<T> | null) => {
+    const node: TVirtualNode<T> = {
       children: [],
       id: value.id,
       parent,

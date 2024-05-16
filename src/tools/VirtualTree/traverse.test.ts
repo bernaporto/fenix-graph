@@ -1,7 +1,7 @@
 import { makeTestTree } from './create.test';
 
-describe('TNodeTree.traverse', () => {
-  it('should traverse a node tree', () => {
+describe('TVirtualTree.traverse', () => {
+  it('should traverse a virtual tree', () => {
     const tree = makeTestTree();
 
     const values: number[] = [];

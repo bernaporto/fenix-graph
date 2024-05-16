@@ -1,1 +1,1 @@
-export const uuid = (): string => crypto.randomUUID();
+export const uuidV4 = (): string => crypto.randomUUID();
