@@ -1,5 +1,5 @@
+import type { TPoint } from '@/types';
 import type {
-  TPoint,
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,

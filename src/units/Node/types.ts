@@ -1,11 +1,11 @@
+import type { TPoint, TUnknownObject } from '@/types';
+import type { TPortSchema, TPortSnapshot } from '@/units/Port';
 import type {
-  TPoint,
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,
   TUnitStore,
 } from '@/units/types';
-import type { TPortSchema, TPortSnapshot } from '@/units/Port';
 
 export type TNodeSchema = {
   label: string;
@@ -15,7 +15,7 @@ export type TNodeSchema = {
 };
 
 export type TNodeState = {
-  payload: Record<string, unknown>;
+  payload: TUnknownObject;
   position: TPoint;
 };
 

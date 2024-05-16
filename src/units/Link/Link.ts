@@ -1,4 +1,4 @@
-import type { TPoint } from '@/units/types';
+import type { TPoint } from '@/types';
 import { uuidV4 } from '@/tools/uuid';
 import type {
   TLinkConfig,

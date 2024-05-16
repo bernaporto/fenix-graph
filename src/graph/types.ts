@@ -1,10 +1,10 @@
 import type { TFenixStore } from '@bernaporto/fenix-store';
-import type { TVirtualTree } from '@/tools/VirtualTree';
+import type { TList, TUnknownObject } from '@/types';
 import type { TLinkSnapshot, TLinkController, TLinkSchema } from '@/units/Link';
 import type { TNodeSnapshot, TNodeController, TNodeSchema } from '@/units/Node';
-import type { TUnitList } from '@/units/types';
+import type { TVirtualTree } from '@/tools/VirtualTree';
 
-export type TGraphState = Record<string, unknown>;
+export type TGraphState = TUnknownObject;
 export type TGraphStore = TFenixStore<TGraphState>;
 
 export type TGraphSnapshot = {
@@ -14,8 +14,8 @@ export type TGraphSnapshot = {
 
 export type TGraphController = {
   dispose: VoidFunction;
-  links: TUnitList<TLinkSchema, TLinkController>;
-  nodes: TUnitList<TNodeSchema, TNodeController>;
+  links: TList<TLinkSchema, TLinkController>;
+  nodes: TList<TNodeSchema, TNodeController>;
 } & {
   tree: (rootId: string) => TVirtualTree<TNodeSnapshot> | null;
   snapshot: () => TGraphSnapshot;

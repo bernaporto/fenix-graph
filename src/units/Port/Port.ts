@@ -1,4 +1,5 @@
-import type { TPoint, TUnitStore } from '../types';
+import type { TPoint } from '@/types';
+import type { TUnitStore } from '@/units/types';
 import type {
   TPortConfig,
   TPortController,

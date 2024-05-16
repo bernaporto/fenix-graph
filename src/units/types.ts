@@ -1,11 +1,6 @@
 import type { TStoreObservable } from '@bernaporto/fenix-store';
 import type { TGraphStore } from '@/graph/types';
-
-type TUnknownObject = Record<string, unknown>;
-
-type TWithID<T extends TUnknownObject> = T & {
-  id: string;
-};
+import type { TUnknownObject, WithId } from '@/types';
 
 export type TUnitStore<T extends TUnknownObject = TUnknownObject> = {
   [key in keyof T]: TStoreObservable<T[key]>;
@@ -16,7 +11,7 @@ export type TUnitSchema = TUnknownObject;
 export type TUnitSnapshot<
   T extends TUnitSchema = TUnitSchema,
   U extends TUnknownObject = TUnknownObject,
-> = TWithID<{
+> = WithId<{
   schema: T;
   state: U;
 }>;
@@ -30,7 +25,7 @@ export type TUnitConfig<T extends TUnitSchema = TUnitSchema> = {
 export type TUnitController<
   T extends TUnitSnapshot = TUnitSnapshot,
   U extends TUnknownObject = TUnknownObject,
-> = TWithID<
+> = WithId<
   {
     dispose: VoidFunction;
     store: TUnitStore<U>;
@@ -38,14 +33,3 @@ export type TUnitController<
     snapshot: () => T;
   }
 >;
-
-export type TUnitList<T, U> = {
-  add: (config: T) => U;
-  remove: (id: string) => void;
-  list: () => U[];
-};
-
-export type TPoint = {
-  x: number;
-  y: number;
-};

@@ -1,5 +1,5 @@
 import { Port } from '@/units/Port';
-import type { TPoint } from '@/units/types';
+import type { TPoint, TUnknownObject } from '@/types';
 import type { TPortController } from '@/units/Port/types';
 import { uuidV4 } from '@/tools/uuid';
 import type {
@@ -22,7 +22,7 @@ const factory = ({
   onDispose,
 }: TCreateNodeConfig): TNodeController => {
   const _store: TNodeStore = Object.freeze({
-    payload: store.on<Record<string, unknown>>(`nodes.${id}.payload`),
+    payload: store.on<TUnknownObject>(`nodes.${id}.payload`),
     position: store.on<TPoint>(`nodes.${id}.position`),
   });
 
