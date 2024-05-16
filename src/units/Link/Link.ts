@@ -1,11 +1,11 @@
+import { getUnitStore } from '@/units/utils';
 import { StorePath } from '@/store';
-import type { TPoint } from '@/types';
 import { uuidV4 } from '@/tools/uuid';
 import type {
   TLinkConfig,
   TLinkController,
   TLinkSnapshot,
-  TLinkStore,
+  TLinkState,
 } from './types';
 
 type TLinkFactoryConfig = TLinkConfig & { id: string };
@@ -16,9 +16,12 @@ const factory = ({
   store,
   onDispose,
 }: TLinkFactoryConfig): TLinkController => {
-  const _store: TLinkStore = Object.freeze({
-    points: store.on<TPoint[]>(StorePath.links(id, 'points')),
-  });
+  const _store = getUnitStore<TLinkState>(store, [
+    {
+      parameter: 'points',
+      basePath: StorePath.links(id),
+    },
+  ]);
 
   return Object.freeze({
     id,

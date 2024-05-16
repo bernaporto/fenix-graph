@@ -1,6 +1,5 @@
+import { getUnitStore } from '@/units/utils';
 import { StorePath } from '@/store';
-import type { TPoint } from '@/types';
-import type { TUnitStore } from '@/units/types';
 import type {
   TPortConfig,
   TPortController,
@@ -12,11 +11,20 @@ const create = (config: TPortConfig): TPortController => {
   const { nodeId, store, schema } = config;
   const id = schema.id;
 
-  const _store: TUnitStore<TPortState> = Object.freeze({
-    connected: store.on<boolean>(StorePath.ports(nodeId, id, 'connected')),
-    links: store.on<string[]>(StorePath.ports(nodeId, id, 'links')),
-    offset: store.on<TPoint>(StorePath.ports(nodeId, id, 'offset')),
-  });
+  const _store = getUnitStore<TPortState>(store, [
+    {
+      parameter: 'connected',
+      basePath: StorePath.ports(nodeId, id),
+    },
+    {
+      parameter: 'links',
+      basePath: StorePath.ports(nodeId, id),
+    },
+    {
+      parameter: 'offset',
+      basePath: StorePath.ports(nodeId, id),
+    },
+  ]);
 
   return Object.freeze({
     id,

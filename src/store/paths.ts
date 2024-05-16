@@ -4,15 +4,17 @@ const BasePath = {
   PORTS: 'ports',
 };
 
-const mergePath = (...parts: string[]) => parts.join('.');
+const join = (...parts: string[]) => parts.join('.');
 
 export const StorePath = {
+  join,
+
   nodes: (id: string, ...addPath: string[]) =>
-    mergePath(BasePath.NODES, id, ...addPath),
+    join(BasePath.NODES, id, ...addPath),
 
   links: (id: string, ...addPath: string[]) =>
-    mergePath(BasePath.LINKS, id, ...addPath),
+    join(BasePath.LINKS, id, ...addPath),
 
   ports: (nodeId: string, portId: string, ...addPath: string[]) =>
-    mergePath(BasePath.NODES, nodeId, BasePath.PORTS, portId, ...addPath),
+    join(BasePath.NODES, nodeId, BasePath.PORTS, portId, ...addPath),
 };
