@@ -1,4 +1,5 @@
 import { Port } from '@/units/Port';
+import { StorePath } from '@/store';
 import type { TPoint, TUnknownObject } from '@/types';
 import type { TPortController } from '@/units/Port/types';
 import { uuidV4 } from '@/tools/uuid';
@@ -22,8 +23,8 @@ const factory = ({
   onDispose,
 }: TCreateNodeConfig): TNodeController => {
   const _store: TNodeStore = Object.freeze({
-    payload: store.on<TUnknownObject>(`nodes.${id}.payload`),
-    position: store.on<TPoint>(`nodes.${id}.position`),
+    payload: store.on<TUnknownObject>(StorePath.nodes(id, 'payload')),
+    position: store.on<TPoint>(StorePath.nodes(id, 'position')),
   });
 
   return Object.freeze({
@@ -69,8 +70,8 @@ const fromSnapshot = (
   const { onDispose, snapshot, store } = config;
   const { id, schema, state } = snapshot;
 
-  store.on(`nodes.${id}.payload`).set(state.payload);
-  store.on(`nodes.${id}.position`).set(state.position);
+  store.on(StorePath.nodes(id, 'payload')).set(state.payload);
+  store.on(StorePath.nodes(id, 'position')).set(state.position);
 
   const ports = state.ports.map((port) =>
     Port.fromSnapshot(port, { store, nodeId: id }),

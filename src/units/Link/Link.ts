@@ -1,3 +1,4 @@
+import { StorePath } from '@/store';
 import type { TPoint } from '@/types';
 import { uuidV4 } from '@/tools/uuid';
 import type {
@@ -16,7 +17,7 @@ const factory = ({
   onDispose,
 }: TLinkFactoryConfig): TLinkController => {
   const _store: TLinkStore = Object.freeze({
-    points: store.on<TPoint[]>(`links.${id}.points`),
+    points: store.on<TPoint[]>(StorePath.links(id, 'points')),
   });
 
   return Object.freeze({
@@ -50,7 +51,7 @@ const fromSnapshot = (
   const { onDispose, snapshot, store } = config;
   const { id, state, schema } = snapshot;
 
-  config.store.on(`links.${id}.points`).set(state.points);
+  config.store.on(StorePath.links(id, 'points')).set(state.points);
 
   return factory({
     id,

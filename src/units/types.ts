@@ -1,5 +1,5 @@
 import type { TStoreObservable } from '@bernaporto/fenix-store';
-import type { TGraphStore } from '@/graph/types';
+import type { TGraphStore } from '@/store';
 import type { TUnknownObject, WithId } from '@/types';
 
 export type TUnitStore<T extends TUnknownObject = TUnknownObject> = {

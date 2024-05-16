@@ -1,8 +1,8 @@
-import { FenixStore } from '@bernaporto/fenix-store';
 import { Link, type TLinkController } from '@/units/Link';
 import { Node, type TNodeController } from '@/units/Node';
+import { Store, type TGraphStore } from '@/store';
 import { VirtualTree } from '@/tools/VirtualTree';
-import type { TGraphController, TGraphSnapshot, TGraphStore } from './types';
+import type { TGraphController, TGraphSnapshot } from './types';
 
 /* Implementation */
 type TGraphFactoryConfig = {
@@ -92,7 +92,7 @@ const factory = ({
 const create = (): TGraphController => {
   const links = new Map<string, TLinkController>();
   const nodes = new Map<string, TNodeController>();
-  const store = FenixStore.create();
+  const store = Store.create();
 
   return factory({ links, nodes, store });
 };
@@ -100,7 +100,7 @@ const create = (): TGraphController => {
 const fromSnapshot = (snapshot: TGraphSnapshot): TGraphController => {
   const links = new Map<string, TLinkController>();
   const nodes = new Map<string, TNodeController>();
-  const store = FenixStore.create();
+  const store = Store.create();
 
   snapshot.nodes.forEach((node) => {
     const controller = Node.fromSnapshot({
