@@ -1,5 +1,6 @@
 {
   "name": "@bernaporto/fenix-graph",
+  "version": "0.0.0",
   "description": "A JavaScript node graph library for visual programming",
   "author": "Bernardo Porto | @bernaporto",
   "main": "dist/index.cjs.js",

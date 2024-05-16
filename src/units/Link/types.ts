@@ -1,12 +1,19 @@
-import type { TUnit, TUnitController } from '@/units/types';
+import type {
+  TUnitConfig,
+  TUnitController,
+  TUnitSnapshot,
+} from '@/units/types';
+
+export type TConnectionSchema = {
+  nodeId: string;
+  portId: string;
+};
 
 export type TLinkSchema = {
-  from: string;
-  to: string;
+  from: TConnectionSchema;
+  to: TConnectionSchema;
 };
 
-export type TLink = TUnit & {
-  schema: TLinkSchema;
-};
-
-export type TLinkController = TUnitController<TLink>;
+export type TLinkSnapshot = TUnitSnapshot<TLinkSchema>;
+export type TLinkConfig = TUnitConfig<TLinkSchema | TLinkSnapshot>;
+export type TLinkController = TUnitController<TLinkSnapshot>;

@@ -1,14 +1,25 @@
-import type { TPortSchema } from '@/units/Port';
-import type { TUnit, TUnitController, TUnitSchema } from '@/units/types';
+import type {
+  TUnitConfig,
+  TUnitController,
+  TUnitSnapshot,
+} from '@/units/types';
 
-export type TNodeSchema = TUnitSchema & {
+export type TPortDirection = 'in' | 'out';
+
+export type TPortSchema = {
+  direction: TPortDirection;
+  id: string;
+  label: string;
+  type: string;
+};
+
+export type TNodeSchema = {
+  label: string;
   ports: TPortSchema[];
+  type: string;
   [key: string]: unknown;
 };
 
-export type TNode = TUnit & {
-  payload: Record<string, unknown>;
-  schema: TNodeSchema;
-};
-
-export type TNodeController = TUnitController<TNode>;
+export type TNodeConfig = TUnitConfig<TNodeSchema | TNodeSnapshot>;
+export type TNodeController = TUnitController<TNodeSnapshot>;
+export type TNodeSnapshot = TUnitSnapshot<TNodeSchema>;
