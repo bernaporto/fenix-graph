@@ -1,97 +1,129 @@
+import { FenixStore } from '@bernaporto/fenix-store';
 import { Link, type TLinkController } from '@/units/Link';
 import { Node, type TNodeController } from '@/units/Node';
 import { VirtualTree } from '@/tools/VirtualTree';
-import type { TGraphController, TGraphState } from './types';
+import type { TGraphController, TGraphSnapshot, TGraphStore } from './types';
 
-const create = (): TGraphController => {
-  const nodes = new Map<string, TNodeController>();
-  const links = new Map<string, TLinkController>();
+/* Implementation */
+type TGraphFactoryConfig = {
+  links: Map<string, TLinkController>;
+  nodes: Map<string, TNodeController>;
+  store: TGraphStore;
+};
 
-  return {
-    dispose: () => {
-      links.forEach((link) => link.dispose());
-      links.clear();
+const factory = ({
+  nodes,
+  links,
+  store,
+}: TGraphFactoryConfig): TGraphController => ({
+  dispose: () => {
+    links.forEach((link) => link.dispose());
+    links.clear();
 
-      nodes.forEach((node) => node.dispose());
-      nodes.clear();
+    nodes.forEach((node) => node.dispose());
+    nodes.clear();
+  },
+
+  snapshot: () => ({
+    nodes: Array.from(nodes.values()).map((node) => node.snapshot()),
+    links: Array.from(links.values()).map((link) => link.snapshot()),
+  }),
+
+  tree: (rootId) => {
+    const root = nodes.get(rootId);
+
+    if (!root) {
+      return null;
+    }
+
+    return VirtualTree.create(root.snapshot(), () => []);
+  },
+
+  links: {
+    add: (schema) => {
+      const link = Link.create({
+        schema,
+        store,
+        onDispose: () => links.delete(link.id),
+      });
+      links.set(link.id, link);
+
+      return link;
     },
 
-    tree: (rootId) => {
-      const root = nodes.get(rootId);
+    list: () => Array.from(links.values()),
 
-      if (!root) {
-        return null;
+    remove: (id) => {
+      const link = links.get(id);
+
+      if (link) {
+        link.dispose();
+        links.delete(id);
       }
+    },
+  },
 
-      return VirtualTree.create(root.snapshot(), () => []);
+  nodes: {
+    add: (schema) => {
+      const node = Node.create({
+        schema,
+        store,
+        onDispose: () => nodes.delete(node.id),
+      });
+      nodes.set(node.id, node);
+
+      return node;
     },
 
-    links: {
-      add: (config) => {
-        const link = Link.create({
-          ...config,
-          onDispose: () => links.delete(link.id),
-        });
-        links.set(link.id, link);
+    list: () => Array.from(nodes.values()),
 
-        return link;
-      },
+    remove: (id) => {
+      const node = nodes.get(id);
 
-      list: () => Array.from(links.values()),
-
-      remove: (id) => {
-        const link = links.get(id);
-
-        if (link) {
-          link.dispose();
-          links.delete(id);
-        }
-      },
+      if (node) {
+        node.dispose();
+        nodes.delete(id);
+      }
     },
-
-    nodes: {
-      add: (config) => {
-        const node = Node.create({
-          ...config,
-          onDispose: () => nodes.delete(node.id),
-        });
-        nodes.set(node.id, node);
-
-        return node;
-      },
-
-      list: () => Array.from(nodes.values()),
-
-      remove: (id) => {
-        const node = nodes.get(id);
-
-        if (node) {
-          node.dispose();
-          nodes.delete(id);
-        }
-      },
-    },
-  };
-};
-
-const fromState = (state: TGraphState): TGraphController => {
-  const graph = Graph.create();
-
-  const { nodes, links } = state;
-
-  nodes.forEach((node) => graph.nodes.add(node));
-  links.forEach((link) => graph.links.add(link));
-
-  return graph;
-};
-
-const toState = (graph: TGraphController): TGraphState => ({
-  nodes: graph.nodes.list().map((node) => node.snapshot()),
-  links: graph.links.list().map((link) => link.snapshot()),
+  },
 });
+
+/* Interfaces */
+const create = (): TGraphController => {
+  const links = new Map<string, TLinkController>();
+  const nodes = new Map<string, TNodeController>();
+  const store = FenixStore.create();
+
+  return factory({ links, nodes, store });
+};
+
+const fromSnapshot = (snapshot: TGraphSnapshot): TGraphController => {
+  const links = new Map<string, TLinkController>();
+  const nodes = new Map<string, TNodeController>();
+  const store = FenixStore.create();
+
+  snapshot.nodes.forEach((node) => {
+    const controller = Node.fromSnapshot({
+      store,
+      onDispose: () => nodes.delete(controller.id),
+      snapshot: node,
+    });
+    nodes.set(controller.id, controller);
+  });
+
+  snapshot.links.forEach((link) => {
+    const controller = Link.fromSnapshot({
+      store,
+      onDispose: () => links.delete(controller.id),
+      snapshot: link,
+    });
+    links.set(controller.id, controller);
+  });
+
+  return factory({ links, nodes, store });
+};
 
 export const Graph = {
   create,
-  fromState,
-  toState,
+  fromSnapshot,
 };

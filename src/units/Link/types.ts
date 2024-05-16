@@ -1,7 +1,9 @@
 import type {
+  TPoint,
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,
+  TUnitStore,
 } from '@/units/types';
 
 export type TConnectionSchema = {
@@ -14,6 +16,11 @@ export type TLinkSchema = {
   to: TConnectionSchema;
 };
 
+export type TLinkState = {
+  points: TPoint[];
+};
+
+export type TLinkConfig = TUnitConfig<TLinkSchema>;
 export type TLinkSnapshot = TUnitSnapshot<TLinkSchema>;
-export type TLinkConfig = TUnitConfig<TLinkSchema | TLinkSnapshot>;
-export type TLinkController = TUnitController<TLinkSnapshot>;
+export type TLinkController = TUnitController<TLinkSnapshot, TLinkState>;
+export type TLinkStore = TUnitStore<TLinkState>;

@@ -1,17 +1,11 @@
 import type {
+  TPoint,
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,
+  TUnitStore,
 } from '@/units/types';
-
-export type TPortDirection = 'in' | 'out';
-
-export type TPortSchema = {
-  direction: TPortDirection;
-  id: string;
-  label: string;
-  type: string;
-};
+import type { TPortSchema, TPortSnapshot } from '@/units/Port';
 
 export type TNodeSchema = {
   label: string;
@@ -20,6 +14,14 @@ export type TNodeSchema = {
   [key: string]: unknown;
 };
 
-export type TNodeConfig = TUnitConfig<TNodeSchema | TNodeSnapshot>;
-export type TNodeController = TUnitController<TNodeSnapshot>;
-export type TNodeSnapshot = TUnitSnapshot<TNodeSchema>;
+export type TNodeState = {
+  payload: Record<string, unknown>;
+  position: TPoint;
+};
+
+type TNodeSnapshotState = TNodeState & { ports: TPortSnapshot[] };
+
+export type TNodeConfig = TUnitConfig<TNodeSchema>;
+export type TNodeSnapshot = TUnitSnapshot<TNodeSchema, TNodeSnapshotState>;
+export type TNodeController = TUnitController<TNodeSnapshot, TNodeState>;
+export type TNodeStore = TUnitStore<TNodeState>;

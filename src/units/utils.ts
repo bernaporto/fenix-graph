@@ -1,7 +1,7 @@
 import { uuidV4 } from '@/tools/uuid';
 import type { TUnitSchema, TUnitSnapshot } from './types';
 
-export const setup = <T extends TUnitSchema, U extends TUnitSnapshot<T>>(
+export const parseConfig = <T extends TUnitSchema, U extends TUnitSnapshot<T>>(
   schemaOrSnapshot: T | U,
 ): {
   id: string;
