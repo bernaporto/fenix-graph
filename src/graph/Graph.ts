@@ -1,122 +1,74 @@
-import { Link, type TLinkController } from '@/units/Link';
-import { Node, type TNodeController } from '@/units/Node';
-import { Store, type TGraphStore } from '@/store';
+import { Link, type TLinkController, type TLinkSchema } from '@/units/Link';
+import { Node, type TNodeController, type TNodeSchema } from '@/units/Node';
+import { Registry } from '@/tools/Registry';
+import { Store } from '@/store';
 import { VirtualTree } from '@/tools/VirtualTree';
 import type { TGraphController, TGraphSnapshot } from './types';
 
 /* Implementation */
 type TGraphFactoryConfig = {
-  links: Map<string, TLinkController>;
-  nodes: Map<string, TNodeController>;
-  store: TGraphStore;
+  initialLinks: TLinkController[];
+  initialNodes: TNodeController[];
 };
 
 const factory = ({
-  nodes,
-  links,
-  store,
-}: TGraphFactoryConfig): TGraphController => ({
-  dispose: () => {
-    links.forEach((link) => link.dispose());
-    links.clear();
-
-    nodes.forEach((node) => node.dispose());
-    nodes.clear();
-  },
-
-  tree: (rootId) => {
-    const root = nodes.get(rootId);
-
-    if (!root) {
-      return null;
-    }
-
-    // TODO: Implement proper tree configuration
-    return VirtualTree.create(Node.toSnapshot(root), () => []);
-  },
-
-  links: {
-    add: (schema) => {
-      const link = Link.create({
-        schema,
-        store,
-        onDispose: () => links.delete(link.id),
-      });
-      links.set(link.id, link);
-
-      return link;
-    },
-
-    list: () => Array.from(links.values()),
-
-    remove: (id) => {
-      const link = links.get(id);
-
-      if (link) {
-        link.dispose();
-        links.delete(id);
-      }
-    },
-  },
-
-  nodes: {
-    add: (schema) => {
-      const node = Node.create({
-        schema,
-        store,
-        onDispose: () => nodes.delete(node.id),
-      });
-      nodes.set(node.id, node);
-
-      return node;
-    },
-
-    list: () => Array.from(nodes.values()),
-
-    remove: (id) => {
-      const node = nodes.get(id);
-
-      if (node) {
-        node.dispose();
-        nodes.delete(id);
-      }
-    },
-  },
-});
-
-/* Interfaces */
-const create = (): TGraphController => {
-  const links = new Map<string, TLinkController>();
-  const nodes = new Map<string, TNodeController>();
+  initialNodes,
+  initialLinks,
+}: TGraphFactoryConfig): TGraphController => {
   const store = Store.create();
 
-  return factory({ links, nodes, store });
+  const nodes = Registry.create<TNodeSchema, TNodeController>({
+    initialItems: initialNodes,
+    onRemove: (node) => node.dispose(),
+    process: (schema) => Node.create({ schema, store }),
+  });
+
+  const links = Registry.create<TLinkSchema, TLinkController>({
+    initialItems: initialLinks,
+    onRemove: (link) => link.dispose(),
+    process: (schema) => Link.create({ schema, store }),
+  });
+
+  return {
+    links,
+    nodes,
+
+    dispose: () => {
+      links.list().forEach((link) => link.dispose());
+      links.clear();
+
+      nodes.list().forEach((node) => node.dispose());
+      nodes.clear();
+    },
+
+    tree: (rootId) => {
+      const root = nodes.get(rootId);
+
+      if (!root) {
+        return null;
+      }
+
+      // TODO: Implement proper tree configuration
+      return VirtualTree.create(Node.toSnapshot(root), () => []);
+    },
+  };
 };
 
+/* Interfaces */
+const create = () => factory({ initialLinks: [], initialNodes: [] });
+
 const fromSnapshot = (snapshot: TGraphSnapshot): TGraphController => {
-  const links = new Map<string, TLinkController>();
-  const nodes = new Map<string, TNodeController>();
   const store = Store.create();
 
-  snapshot.nodes.forEach((node) => {
-    const controller = Node.fromSnapshot({
-      store,
-      onDispose: () => nodes.delete(controller.id),
-      snapshot: node,
-    });
-    nodes.set(controller.id, controller);
-  });
+  const initialNodes = snapshot.nodes.map((node) =>
+    Node.fromSnapshot({ store, snapshot: node }),
+  );
 
-  snapshot.links.forEach((link) => {
-    const controller = Link.fromSnapshot({
-      store,
-      onDispose: () => links.delete(controller.id),
-      snapshot: link,
-    });
-    links.set(controller.id, controller);
-  });
+  const initialLinks = snapshot.links.map((link) =>
+    Link.fromSnapshot({ store, snapshot: link }),
+  );
 
-  return factory({ links, nodes, store });
+  return factory({ initialLinks, initialNodes });
 };
 
 const toSnapshot = (controller: TGraphController): TGraphSnapshot => {

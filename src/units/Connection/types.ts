@@ -14,10 +14,7 @@ export type TConnectionState = {
   position: TPoint;
 };
 
-export type TConnectionConfig = Omit<
-  TUnitConfig<TConnectionSchema>,
-  'onDispose'
-> & {
+export type TConnectionConfig = TUnitConfig<TConnectionSchema> & {
   linkId: string;
 };
 export type TConnectionController = TUnitController<

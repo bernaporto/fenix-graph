@@ -20,7 +20,6 @@ const factory = ({
   ports,
   schema,
   store,
-  onDispose,
 }: TCreateNodeConfig): TNodeController => {
   const _store = getUnitStore<TNodeState>(store, [
     {
@@ -38,13 +37,11 @@ const factory = ({
     ports,
     schema: Object.freeze(structuredClone(schema)),
     store: _store,
-    dispose: () => {
-      onDispose?.();
-    },
+    dispose: () => {},
   });
 };
 
-const create = ({ onDispose, store, schema }: TNodeConfig): TNodeController => {
+const create = ({ store, schema }: TNodeConfig): TNodeController => {
   const id = uuidV4();
 
   const ports = schema.ports.map((port) =>
@@ -56,14 +53,13 @@ const create = ({ onDispose, store, schema }: TNodeConfig): TNodeController => {
     ports,
     schema,
     store,
-    onDispose,
   });
 };
 
 const fromSnapshot = (
   config: Omit<TNodeConfig, 'schema'> & { snapshot: TNodeSnapshot },
 ): TNodeController => {
-  const { onDispose, snapshot, store } = config;
+  const { snapshot, store } = config;
   const { id, schema, state } = snapshot;
 
   store.on(StorePath.nodes(id, 'payload')).set(state.payload);
@@ -78,7 +74,6 @@ const fromSnapshot = (
     ports,
     schema,
     store,
-    onDispose,
   });
 };
 

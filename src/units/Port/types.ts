@@ -20,8 +20,6 @@ export type TPortState = {
   offset: TPoint;
 };
 
-export type TPortConfig = Omit<TUnitConfig<TPortSchema>, 'onDispose'> & {
-  nodeId: string;
-};
+export type TPortConfig = TUnitConfig<TPortSchema> & { nodeId: string };
 export type TPortController = TUnitController<TPortSchema, TPortState>;
 export type TPortSnapshot = TUnitSnapshot<TPortSchema, TPortState>;

@@ -18,7 +18,6 @@ export type TUnitSnapshot<
 }>;
 
 export type TUnitConfig<T extends TUnitSchema = TUnitSchema> = {
-  onDispose: VoidFunction;
   schema: T;
   store: TGraphStore;
 };

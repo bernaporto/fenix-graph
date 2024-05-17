@@ -19,7 +19,6 @@ const factory = ({
   id,
   schema,
   store,
-  onDispose,
 }: TLinkFactoryConfig): TLinkController => {
   const _store = getUnitStore<TLinkState>(store, [
     {
@@ -33,13 +32,11 @@ const factory = ({
     connections,
     schema: Object.freeze(structuredClone(schema)),
     store: _store,
-    dispose: () => {
-      onDispose?.();
-    },
+    dispose: () => {},
   });
 };
 
-const create = ({ onDispose, store, schema }: TLinkConfig): TLinkController => {
+const create = ({ store, schema }: TLinkConfig): TLinkController => {
   const id = uuidV4();
 
   const connections = [schema.from, schema.to].map((port) =>
@@ -49,7 +46,6 @@ const create = ({ onDispose, store, schema }: TLinkConfig): TLinkController => {
   return factory({
     connections,
     id,
-    onDispose,
     schema,
     store,
   });
@@ -58,7 +54,7 @@ const create = ({ onDispose, store, schema }: TLinkConfig): TLinkController => {
 const fromSnapshot = (
   config: Omit<TLinkConfig, 'schema'> & { snapshot: TLinkSnapshot },
 ): TLinkController => {
-  const { onDispose, snapshot, store } = config;
+  const { snapshot, store } = config;
   const { id, state, schema } = snapshot;
 
   config.store.on(StorePath.links(id, 'payload')).set(state.payload);
@@ -74,7 +70,6 @@ const fromSnapshot = (
   return factory({
     connections,
     id,
-    onDispose,
     schema,
     store,
   });
