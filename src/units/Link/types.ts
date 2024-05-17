@@ -1,15 +1,14 @@
+import type {
+  TConnectionController,
+  TConnectionSchema,
+  TConnectionSnapshot,
+} from '@/units/Connection';
 import type { TUnknownObject } from '@/types';
 import type {
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,
-  TUnitStore,
 } from '@/units/types';
-
-export type TConnectionSchema = {
-  nodeId: string;
-  portId: string;
-};
 
 export type TLinkSchema = {
   from: TConnectionSchema;
@@ -20,7 +19,10 @@ export type TLinkState = {
   payload: TUnknownObject;
 };
 
+type TLinkSnapshotState = TLinkState & { connections: TConnectionSnapshot[] };
+
 export type TLinkConfig = TUnitConfig<TLinkSchema>;
-export type TLinkSnapshot = TUnitSnapshot<TLinkSchema>;
-export type TLinkController = TUnitController<TLinkSchema, TLinkState>;
-export type TLinkStore = TUnitStore<TLinkState>;
+export type TLinkSnapshot = TUnitSnapshot<TLinkSchema, TLinkSnapshotState>;
+export type TLinkController = TUnitController<TLinkSchema, TLinkState> & {
+  connections: TConnectionController[];
+};

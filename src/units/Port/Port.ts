@@ -35,10 +35,9 @@ const create = (config: TPortConfig): TPortController => {
 };
 
 const fromSnapshot = (
-  snapshot: TPortSnapshot,
-  config: Omit<TPortConfig, 'schema'>,
+  config: Omit<TPortConfig, 'schema'> & { snapshot: TPortSnapshot },
 ): TPortController => {
-  const { nodeId, store } = config;
+  const { nodeId, snapshot, store } = config;
   const { id, state, schema } = snapshot;
 
   store.on(StorePath.ports(nodeId, id, 'connected')).set(state.connected);

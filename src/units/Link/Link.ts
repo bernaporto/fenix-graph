@@ -7,10 +7,15 @@ import type {
   TLinkSnapshot,
   TLinkState,
 } from './types';
+import { Connection, type TConnectionController } from '../Connection';
 
-type TLinkFactoryConfig = TLinkConfig & { id: string };
+type TLinkFactoryConfig = TLinkConfig & {
+  connections: TConnectionController[];
+  id: string;
+};
 
 const factory = ({
+  connections,
   id,
   schema,
   store,
@@ -25,6 +30,7 @@ const factory = ({
 
   return Object.freeze({
     id,
+    connections,
     schema: Object.freeze(structuredClone(schema)),
     store: _store,
     dispose: () => {
@@ -33,11 +39,21 @@ const factory = ({
   });
 };
 
-const create = (config: TLinkConfig): TLinkController =>
-  factory({
-    id: uuidV4(),
-    ...config,
+const create = ({ onDispose, store, schema }: TLinkConfig): TLinkController => {
+  const id = uuidV4();
+
+  const connections = [schema.from, schema.to].map((port) =>
+    Connection.create({ store, linkId: id, schema: port }),
+  );
+
+  return factory({
+    connections,
+    id,
+    onDispose,
+    schema,
+    store,
   });
+};
 
 const fromSnapshot = (
   config: Omit<TLinkConfig, 'schema'> & { snapshot: TLinkSnapshot },
@@ -45,9 +61,18 @@ const fromSnapshot = (
   const { onDispose, snapshot, store } = config;
   const { id, state, schema } = snapshot;
 
-  config.store.on(StorePath.links(id, 'points')).set(state.points);
+  config.store.on(StorePath.links(id, 'payload')).set(state.payload);
+
+  const connections = state.connections.map((connection) =>
+    Connection.fromSnapshot({
+      store,
+      linkId: id,
+      snapshot: connection,
+    }),
+  );
 
   return factory({
+    connections,
     id,
     onDispose,
     schema,
@@ -63,6 +88,7 @@ const toSnapshot = (controller: TLinkController): TLinkSnapshot => {
     schema,
     state: {
       payload: store.payload.get(),
+      connections: controller.connections.map(Connection.toSnapshot),
     },
   };
 };

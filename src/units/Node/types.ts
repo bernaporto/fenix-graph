@@ -4,7 +4,6 @@ import type {
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,
-  TUnitStore,
 } from '@/units/types';
 
 export type TNodeSchema = {
@@ -26,4 +25,3 @@ export type TNodeSnapshot = TUnitSnapshot<TNodeSchema, TNodeSnapshotState>;
 export type TNodeController = TUnitController<TNodeSchema, TNodeState> & {
   ports: TPortController[];
 };
-export type TNodeStore = TUnitStore<TNodeState>;

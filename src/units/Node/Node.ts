@@ -70,7 +70,7 @@ const fromSnapshot = (
   store.on(StorePath.nodes(id, 'position')).set(state.position);
 
   const ports = state.ports.map((port) =>
-    Port.fromSnapshot(port, { store, nodeId: id }),
+    Port.fromSnapshot({ store, nodeId: id, snapshot: port }),
   );
 
   return factory({
