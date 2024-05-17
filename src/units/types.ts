@@ -1,5 +1,6 @@
 import type { TStoreObservable } from '@bernaporto/fenix-store';
 import type { TGraphStore } from '@/store';
+import type { TRegistry } from '@/tools/Registry';
 import type { TUnknownObject, WithId } from '@/types';
 
 export type TUnitStore<T extends TUnknownObject = TUnknownObject> = {
@@ -30,3 +31,8 @@ export type TUnitController<
   schema: T;
   store: TUnitStore<U>;
 }>;
+
+export type TSubUnitRegistry<T, U extends { id: string }> = Pick<
+  TRegistry<T, U>,
+  'get' | 'list'
+>;

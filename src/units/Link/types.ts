@@ -5,6 +5,7 @@ import type {
 } from '@/units/Connection';
 import type { TUnknownObject } from '@/types';
 import type {
+  TSubUnitRegistry,
   TUnitConfig,
   TUnitController,
   TUnitSnapshot,
@@ -24,5 +25,5 @@ type TLinkSnapshotState = TLinkState & { connections: TConnectionSnapshot[] };
 export type TLinkConfig = TUnitConfig<TLinkSchema>;
 export type TLinkSnapshot = TUnitSnapshot<TLinkSchema, TLinkSnapshotState>;
 export type TLinkController = TUnitController<TLinkSchema, TLinkState> & {
-  connections: TConnectionController[];
+  connections: TSubUnitRegistry<TConnectionSchema, TConnectionController>;
 };

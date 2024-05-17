@@ -1,4 +1,10 @@
+import {
+  Connection,
+  type TConnectionController,
+  type TConnectionSchema,
+} from '@/units/Connection';
 import { getUnitStore } from '@/units/utils';
+import { Registry } from '@/tools/Registry';
 import { StorePath } from '@/store';
 import { uuidV4 } from '@/tools/uuid';
 import type {
@@ -7,7 +13,6 @@ import type {
   TLinkSnapshot,
   TLinkState,
 } from './types';
-import { Connection, type TConnectionController } from '../Connection';
 
 type TLinkFactoryConfig = TLinkConfig & {
   connections: TConnectionController[];
@@ -27,12 +32,28 @@ const factory = ({
     },
   ]);
 
+  const connRegistry = Registry.create({
+    initialItems: connections,
+    process: (schema: TConnectionSchema) =>
+      Connection.create({
+        schema,
+        store,
+        linkId: id,
+      }),
+  });
+
   return Object.freeze({
     id,
-    connections,
+    connections: {
+      get: connRegistry.get,
+      list: connRegistry.list,
+    },
     schema: Object.freeze(structuredClone(schema)),
     store: _store,
-    dispose: () => {},
+    dispose: () => {
+      connRegistry.list().forEach((connection) => connection.dispose());
+      connRegistry.clear();
+    },
   });
 };
 
@@ -83,7 +104,7 @@ const toSnapshot = (controller: TLinkController): TLinkSnapshot => {
     schema,
     state: {
       payload: store.payload.get(),
-      connections: controller.connections.map(Connection.toSnapshot),
+      connections: controller.connections.list().map(Connection.toSnapshot),
     },
   };
 };

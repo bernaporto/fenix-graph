@@ -1,7 +1,8 @@
 import { getUnitStore } from '@/units/utils';
 import { Port } from '@/units/Port';
+import { Registry } from '@/tools/Registry';
 import { StorePath } from '@/store';
-import type { TPortController } from '@/units/Port/types';
+import type { TPortController, TPortSchema } from '@/units/Port/types';
 import { uuidV4 } from '@/tools/uuid';
 import type {
   TNodeConfig,
@@ -32,9 +33,22 @@ const factory = ({
     },
   ]);
 
+  const portRegistry = Registry.create({
+    initialItems: ports,
+    process: (schema: TPortSchema) =>
+      Port.create({
+        schema,
+        store,
+        nodeId: id,
+      }),
+  });
+
   return Object.freeze({
     id,
-    ports,
+    ports: {
+      get: portRegistry.get,
+      list: portRegistry.list,
+    },
     schema: Object.freeze(structuredClone(schema)),
     store: _store,
     dispose: () => {},
@@ -86,7 +100,7 @@ const toSnapshot = (controller: TNodeController): TNodeSnapshot => {
     state: {
       payload: store.payload.get(),
       position: store.position.get(),
-      ports: controller.ports.map(Port.toSnapshot),
+      ports: controller.ports.list().map(Port.toSnapshot),
     },
   };
 };

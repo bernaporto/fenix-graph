@@ -12,7 +12,7 @@ export type TRegistry<T, U extends TRegistryItem> = {
 
 type TRegistryConfig<T, U extends TRegistryItem> = {
   process: (config: T) => U;
-  onRemove: (item: U) => void;
+  onRemove?: (item: U) => void;
 } & {
   initialItems?: U[];
 };
@@ -42,7 +42,7 @@ const create = <T, U extends TRegistryItem>({
       const item = items.get(id);
 
       if (item) {
-        onRemove(item);
+        onRemove?.(item);
         items.delete(id);
       }
     },
