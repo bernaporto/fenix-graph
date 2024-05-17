@@ -1,7 +1,7 @@
-import { uuidV4 } from '@/tools/uuid';
 import type {
   TConnectionConfig,
   TConnectionController,
+  TConnectionSchema,
   TConnectionSnapshot,
   TConnectionState,
 } from './types';
@@ -13,7 +13,7 @@ const create = ({
   schema,
   store,
 }: TConnectionConfig): TConnectionController => {
-  const id = uuidV4();
+  const id = Connection.getId(schema);
 
   const _store = getUnitStore<TConnectionState>(store, [
     {
@@ -57,4 +57,6 @@ export const Connection = {
   create,
   fromSnapshot,
   toSnapshot,
+  getId: (schema: TConnectionSchema): string =>
+    [schema.nodeId, schema.portId].join(':'),
 };
