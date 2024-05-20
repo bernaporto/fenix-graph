@@ -4,11 +4,11 @@
   &__label {
     @apply w-full;
 
-    &--input {
+    &--in {
       @apply text-left;
     }
 
-    &--output {
+    &--out {
       @apply text-right;
     }
   }
@@ -19,11 +19,11 @@
     @apply border border-gray-400 dark:border-gray-700;
     @apply rounded-sm;
 
-    &--input {
+    &--in {
       @apply -left-1.5 hover:-left-2;
     }
 
-    &--output {
+    &--out {
       @apply -right-1.5 hover:-right-2;
     }
 
