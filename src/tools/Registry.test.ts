@@ -35,4 +35,13 @@ describe('Registry', () => {
 
     expect(found).toBe(item);
   });
+
+  it('should be able to get keys', () => {
+    const registry = Registry.create();
+    const item = registry.add({ name: 'Item' });
+
+    const keys = registry.keys();
+
+    expect(keys).toEqual([item.id]);
+  });
 });

@@ -11,6 +11,7 @@ export type TRegistry<T, U extends TRegistryItem> = {
   add: (config: T) => U;
   clear: () => void;
   get: (id: string) => U | null;
+  keys: () => string[];
   remove: (id: string) => void;
   list: () => U[];
 };
@@ -51,7 +52,9 @@ const create = <
 
     get: (id: string) => items.get(id) ?? null,
 
-    list: () => Array.from(items.values()),
+    keys: () => [...items.keys()],
+
+    list: () => [...items.values()],
 
     remove: (id: string) => {
       const item = items.get(id);
