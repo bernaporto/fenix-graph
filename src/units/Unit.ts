@@ -25,7 +25,7 @@ export class Unit<Sc extends TUnitSchema, St extends TUnitState> {
     this.store = Object.freeze(store);
 
     if (initialState) {
-      Object.keys(initialState).forEach((key: keyof St) => {
+      Object.keys(store).forEach((key: keyof TUnitStore<St>) => {
         const value = initialState[key];
         this.store[key].set(value);
       });

@@ -1,2 +1,2 @@
-export type { TGraphController } from './types';
+export type { TGraph } from './types';
 export { Graph } from './Graph';

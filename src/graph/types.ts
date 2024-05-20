@@ -14,10 +14,10 @@ export type TGraphSnapshot = {
   nodes: TNodeSnapshot[];
 };
 
-export type TGraphController = {
+export type TGraph = {
   dispose: VoidFunction;
-  links: TRegistry<TLinkSchema, Link>;
-  nodes: TRegistry<TNodeSchema, Node>;
+  links: Omit<TRegistry<TLinkSchema, Link>, 'clear'>;
+  nodes: Omit<TRegistry<TNodeSchema, Node>, 'clear'>;
 } & {
   tree: (rootId: string) => TVirtualTree<TNodeSnapshot> | null;
 };

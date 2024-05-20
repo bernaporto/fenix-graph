@@ -51,6 +51,10 @@ export class Link extends Unit<TLinkSchema, TLinkState> {
         }),
     });
 
+    if (this.connRegistry.size === 0) {
+      [schema.from, schema.to].map(this.connRegistry.add);
+    }
+
     this.connections = Object.freeze({
       get: this.connRegistry.get,
       list: this.connRegistry.list,
@@ -61,7 +65,7 @@ export class Link extends Unit<TLinkSchema, TLinkState> {
     this.connRegistry.clear();
   }
 
-  public toSnapshot(): TLinkSnapshot {
+  public override toSnapshot(): TLinkSnapshot {
     return {
       id: this.id,
       schema: this.schema,

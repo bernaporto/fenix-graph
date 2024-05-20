@@ -52,6 +52,10 @@ export class Node extends Unit<TNodeSchema, TNodeState> {
         }),
     });
 
+    if (this.portRegistry.size === 0) {
+      schema.ports.map(this.portRegistry.add);
+    }
+
     this.ports = {
       get: this.portRegistry.get,
       list: this.portRegistry.list,
@@ -62,7 +66,7 @@ export class Node extends Unit<TNodeSchema, TNodeState> {
     this.portRegistry.clear();
   }
 
-  override toSnapshot(): TNodeSnapshot {
+  public override toSnapshot(): TNodeSnapshot {
     return {
       id: this.id,
       schema: this.schema,

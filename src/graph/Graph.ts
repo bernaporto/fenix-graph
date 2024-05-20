@@ -3,7 +3,7 @@ import { Registry } from '@/tools/Registry';
 import { Store } from '@/store';
 import { VirtualTree } from '@/tools/VirtualTree';
 import type { TLinkSchema, TNodeSchema } from '@/units';
-import type { TGraphController, TGraphSnapshot } from './types';
+import type { TGraph, TGraphSnapshot } from './types';
 
 /* Implementation */
 type TGraphFactoryConfig = {
@@ -14,7 +14,7 @@ type TGraphFactoryConfig = {
 const factory = ({
   initialNodes,
   initialLinks,
-}: TGraphFactoryConfig): TGraphController => {
+}: TGraphFactoryConfig): TGraph => {
   const store = Store.create();
 
   const nodes = Registry.create<TNodeSchema, Node>({
@@ -57,7 +57,7 @@ const factory = ({
 /* Interfaces */
 const create = () => factory({ initialLinks: [], initialNodes: [] });
 
-const fromSnapshot = (snapshot: TGraphSnapshot): TGraphController => {
+const fromSnapshot = (snapshot: TGraphSnapshot): TGraph => {
   const store = Store.create();
 
   const initialNodes = snapshot.nodes.map((node) =>
@@ -71,7 +71,7 @@ const fromSnapshot = (snapshot: TGraphSnapshot): TGraphController => {
   return factory({ initialLinks, initialNodes });
 };
 
-const toSnapshot = (controller: TGraphController): TGraphSnapshot => {
+const toSnapshot = (controller: TGraph): TGraphSnapshot => {
   const { nodes, links } = controller;
 
   return {
