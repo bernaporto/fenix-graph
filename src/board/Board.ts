@@ -8,10 +8,8 @@ type TBoardConfig = {
   graph?: TGraph;
 };
 
-const create = ({
-  debug,
-  graph = Graph.create({ debug }),
-}: TBoardConfig): TBoard => {
+const create = (config?: TBoardConfig): TBoard => {
+  const { debug, graph = Graph.create({ debug }) } = { ...config };
   const store = Store.create({
     debug,
   });

@@ -17,8 +17,9 @@ export type TRegistry<T, U extends TRegistryItem> = {
 };
 
 type TRegistryConfig<T, U extends TRegistryItem> = {
-  process?: (config: T) => U;
+  onCreate?: (item: U) => void;
   onRemove?: (item: U) => void;
+  process?: (config: T) => U;
 } & {
   initialItems?: U[];
 };
@@ -30,6 +31,7 @@ const create = <
   config?: TRegistryConfig<T, U>,
 ): TRegistry<T, U> => {
   const {
+    onCreate,
     onRemove,
     initialItems = [],
     process = (config: T) => ({ ...config, id: uuidV4() }) as unknown as U,
@@ -44,6 +46,8 @@ const create = <
     add: (config: T) => {
       const item = process(config);
       items.set(item.id, item);
+
+      onCreate?.(item);
 
       return item;
     },

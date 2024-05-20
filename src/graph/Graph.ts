@@ -1,10 +1,13 @@
 import { Link, Node } from '@/units';
 import { Registry } from '@/tools/Registry';
-import { Store } from '@/graph/store';
+import { Store, StorePath } from '@/graph/store';
 import { VirtualTree } from '@/tools/VirtualTree';
-import type { TLinkSchema, TNodeSchema } from '@/units';
-import type { TGraph, TGraphSnapshot } from './types';
-import { hookStore } from './utils/hookStore';
+import type {
+  TGraph,
+  TGraphSnapshot,
+  TLinkRegistryInput,
+  TNodeRegistryInput,
+} from './types';
 
 /* Implementation */
 type TGraphConfig = {
@@ -24,39 +27,76 @@ const factory = ({
   initialLinks = [],
 }: TGraphFactoryConfig): TGraph => {
   const store = Store.create({ debug });
-  const listeners = new Set<() => void>();
+  const linkIds = store.on<string[]>(StorePath.paths.LINK_IDS);
+  const nodeIds = store.on<string[]>(StorePath.paths.NODE_IDS);
 
+  const listeners = new Set<() => void>();
   const emitChanged = () => {
     listeners.forEach((listener) => listener());
   };
 
-  const nodes = Registry.create<TNodeSchema, Node>({
+  const nodes = Registry.create<TNodeRegistryInput, Node>({
     initialItems: initialNodes,
+    onCreate: () => {
+      nodeIds.set(nodes.keys());
+      emitChanged();
+    },
     onRemove: (node) => {
       node.dispose();
+      nodeIds.set(nodes.keys());
       emitChanged();
     },
-    process: (schema) => {
-      const node = new Node({ schema, store });
-      emitChanged();
-      return node;
-    },
+    process: ({ schema, state }) =>
+      new Node({
+        schema,
+        store,
+        initialState: Object.assign(
+          {
+            position: { x: 0, y: 0 },
+            payload: {},
+          },
+          state,
+        ),
+      }),
   });
 
-  const links = Registry.create<TLinkSchema, Link>({
+  const links = Registry.create<TLinkRegistryInput, Link>({
     initialItems: initialLinks,
+    onCreate: () => {
+      linkIds.set(links.keys());
+      emitChanged();
+    },
     onRemove: (link) => {
       link.dispose();
+      linkIds.set(links.keys());
       emitChanged();
     },
-    process: (schema) => new Link({ schema, store }),
+    process: ({ schema, state }) =>
+      new Link({
+        schema,
+        store,
+        initialState: Object.assign({ payload: {}, temp: false }, state),
+      }),
   });
 
-  const { linkIds, nodeIds } = hookStore(store);
-
   return {
-    links,
-    nodes,
+    links: {
+      add: links.add,
+      get: links.get,
+      keys: links.keys,
+      list: links.list,
+      remove: links.remove,
+      size: links.size,
+    },
+
+    nodes: {
+      add: nodes.add,
+      get: nodes.get,
+      keys: nodes.keys,
+      list: nodes.list,
+      remove: nodes.remove,
+      size: nodes.size,
+    },
 
     store: {
       linkIds: {

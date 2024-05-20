@@ -36,7 +36,7 @@
         <!-- HEADER -->
         <div class={classNames({ block, element: 'header' })}>
           <div class={classNames({ block, element: 'title' })}>
-            {node.schema.title}
+            {node.schema.label}
           </div>
         </div>
 

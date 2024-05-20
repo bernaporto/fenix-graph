@@ -15,11 +15,7 @@ describe('Graph', () => {
 
   it('should be able to remove a node', () => {
     const graph = Graph.create();
-    const node = graph.nodes.add({
-      label: 'Node',
-      ports: [],
-      type: 'test-node',
-    });
+    const node = addSingleNode(graph);
 
     graph.nodes.remove(node.id);
 
@@ -124,46 +120,54 @@ describe('Graph', () => {
 
 const addSingleNode = (graph: TGraph): Node => {
   return graph.nodes.add({
-    label: 'Node',
-    ports: [],
-    type: 'test-node',
+    schema: {
+      label: 'Node',
+      ports: [],
+      type: 'test-node',
+    },
   });
 };
 
 const addNodesAndConnect = (graph: TGraph): [Link, Node, Node] => {
   const node1 = graph.nodes.add({
-    label: 'Node 1',
-    ports: [
-      {
-        direction: 'in',
-        id: 'port-1',
-        label: 'Port 1',
-        type: 'test-port',
-      },
-    ],
-    type: 'test-node-1',
+    schema: {
+      label: 'Node 1',
+      ports: [
+        {
+          direction: 'in',
+          id: 'port-1',
+          label: 'Port 1',
+          type: 'test-port',
+        },
+      ],
+      type: 'test-node-1',
+    },
   });
   const node2 = graph.nodes.add({
-    label: 'Node 2',
-    ports: [
-      {
-        direction: 'out',
-        id: 'port-2',
-        label: 'Port 2',
-        type: 'test-port',
-      },
-    ],
-    type: 'test-node-2',
+    schema: {
+      label: 'Node 2',
+      ports: [
+        {
+          direction: 'out',
+          id: 'port-2',
+          label: 'Port 2',
+          type: 'test-port',
+        },
+      ],
+      type: 'test-node-2',
+    },
   });
 
   const link = graph.links.add({
-    from: {
-      nodeId: node1.id,
-      portId: 'test-port',
-    },
-    to: {
-      nodeId: node2.id,
-      portId: 'test-port',
+    schema: {
+      from: {
+        nodeId: node1.id,
+        portId: 'test-port',
+      },
+      to: {
+        nodeId: node2.id,
+        portId: 'test-port',
+      },
     },
   });
 

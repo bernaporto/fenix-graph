@@ -23,9 +23,9 @@ export class Connection extends Unit<TConnectionSchema, TConnectionState> {
     },
   }: TConnectionConfig) {
     super({
-      id: Connection.getId(schema),
       initialState,
       schema,
+      id: Connection.getId(schema),
       store: {
         position: store.on<TPoint>(
           StorePath.connections(linkId, Connection.getId(schema), 'position'),
