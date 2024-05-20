@@ -14,7 +14,14 @@ type TConnectionConfig = TUnitConfig<TConnectionSchema, TConnectionState> & {
 };
 
 export class Connection extends Unit<TConnectionSchema, TConnectionState> {
-  constructor({ initialState, linkId, schema, store }: TConnectionConfig) {
+  constructor({
+    linkId,
+    schema,
+    store,
+    initialState = {
+      position: { x: 0, y: 0 },
+    },
+  }: TConnectionConfig) {
     super({
       id: Connection.getId(schema),
       initialState,

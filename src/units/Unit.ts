@@ -1,9 +1,9 @@
+import type { TUnitStore } from '@/types';
 import type {
   TUnitConfig,
   TUnitSchema,
   TUnitSnapshot,
   TUnitState,
-  TUnitStore,
 } from './types';
 
 type TConfig<Sc extends TUnitSchema, St extends TUnitState> = Omit<

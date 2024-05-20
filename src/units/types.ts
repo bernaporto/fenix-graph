@@ -1,4 +1,3 @@
-import type { TStoreObservable } from '@bernaporto/fenix-store';
 import type { TGraphStore } from '@/graph/store';
 import type { TPoint, TUnknownObject, WithId } from '@/types';
 
@@ -11,10 +10,6 @@ export type TUnitConfig<Sc extends TUnitSchema, St extends TUnitState> = {
   store: TGraphStore;
   initialState?: St;
 };
-
-export type TUnitStore<T extends TUnitState = TUnitState> = Readonly<{
-  [key in keyof T]: TStoreObservable<T[key]>;
-}>;
 
 export type TUnitSnapshot<
   Sc extends TUnitSchema = TUnitSchema,
@@ -52,6 +47,7 @@ export type TLinkSchema = {
 
 export type TLinkState = {
   payload: TUnknownObject;
+  temp: boolean;
 };
 
 type TLinkSnapshotState = TLinkState & { connections: TConnectionSnapshot[] };

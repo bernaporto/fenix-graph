@@ -27,9 +27,12 @@ export class Node extends Unit<TNodeSchema, TNodeState> {
   constructor({
     schema,
     store,
-    initialState,
     id = uuidV4(),
     ports = [],
+    initialState = {
+      payload: Object.create(null),
+      position: { x: 0, y: 0 },
+    },
   }: TNodeConfig) {
     super({
       id,

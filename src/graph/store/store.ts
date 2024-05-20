@@ -9,7 +9,9 @@ export const Store = {
       {
         nodes: {},
         links: {},
+        linkIds: [],
+        nodeIds: [],
       },
-      { ...config, debugKey: 'FenixGraph' },
+      { ...config, debugKey: 'Graph' },
     ),
 };

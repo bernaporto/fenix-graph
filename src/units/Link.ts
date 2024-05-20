@@ -25,11 +25,14 @@ export class Link extends Unit<TLinkSchema, TLinkState> {
   private connRegistry: TConnectionRegistry;
 
   constructor({
-    initialState,
     schema,
     store,
     connections = [],
     id = uuidV4(),
+    initialState = {
+      payload: Object.create(null),
+      temp: false,
+    },
   }: TLinkConfig) {
     super({
       id,
@@ -37,6 +40,7 @@ export class Link extends Unit<TLinkSchema, TLinkState> {
       schema,
       store: {
         payload: store.on<TUnknownObject>(StorePath.links(id, 'payload')),
+        temp: store.on<boolean>(StorePath.links(id, 'temp')),
       },
     });
 
@@ -70,8 +74,9 @@ export class Link extends Unit<TLinkSchema, TLinkState> {
       id: this.id,
       schema: this.schema,
       state: {
-        payload: this.store.payload.get(),
         connections: this.connections.list().map((conn) => conn.toSnapshot()),
+        payload: this.store.payload.get(),
+        temp: this.store.temp.get(),
       },
     };
   }

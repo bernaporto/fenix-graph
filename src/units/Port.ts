@@ -13,7 +13,16 @@ export type TPortConfig = TUnitConfig<TPortSchema, TPortState> & {
 };
 
 export class Port extends Unit<TPortSchema, TPortState> {
-  constructor({ initialState, nodeId, schema, store }: TPortConfig) {
+  constructor({
+    nodeId,
+    schema,
+    store,
+    initialState = {
+      connected: false,
+      links: [],
+      offset: { x: 0, y: 0 },
+    },
+  }: TPortConfig) {
     super({
       initialState,
       schema,

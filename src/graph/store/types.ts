@@ -1,8 +1,10 @@
 import type { TFenixStore } from '@bernaporto/fenix-store';
 import type { TUnknownObject } from '@/types';
 
-export type TGraphState = {
-  nodes: TUnknownObject;
+type TGraphState = {
   links: TUnknownObject;
+  linkIds: string[];
+  nodes: TUnknownObject;
+  nodeIds: string[];
 };
 export type TGraphStore = TFenixStore<TGraphState>;
