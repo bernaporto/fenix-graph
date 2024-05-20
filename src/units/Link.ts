@@ -1,6 +1,6 @@
 import type { TUnknownObject } from '@/types';
 import { Registry, type TRegistry } from '@/tools/Registry';
-import { StorePath } from '@/store';
+import { StorePath } from '@/graph/store';
 import { uuidV4 } from '@/tools/uuid';
 import { Connection } from './Connection';
 import type {

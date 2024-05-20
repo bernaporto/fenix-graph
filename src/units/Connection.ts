@@ -1,4 +1,4 @@
-import { StorePath } from '@/store';
+import { StorePath } from '@/graph/store';
 import type { TPoint } from '@/types';
 import type {
   TConnectionSchema,

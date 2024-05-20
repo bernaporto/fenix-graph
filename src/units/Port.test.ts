@@ -1,4 +1,4 @@
-import { Store } from '@/store';
+import { Store } from '@/graph/store';
 import { Port } from './Port';
 import type { TPortSchema } from './types';
 

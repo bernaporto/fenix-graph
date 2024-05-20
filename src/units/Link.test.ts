@@ -1,4 +1,4 @@
-import { Store } from '@/store';
+import { Store } from '@/graph/store';
 import { Link } from './Link';
 import type { TLinkSchema } from './types';
 

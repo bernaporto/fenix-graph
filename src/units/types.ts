@@ -1,5 +1,5 @@
 import type { TStoreObservable } from '@bernaporto/fenix-store';
-import type { TGraphStore } from '@/store';
+import type { TGraphStore } from '@/graph/store';
 import type { TPoint, TUnknownObject, WithId } from '@/types';
 
 /* UNIT */

@@ -1,4 +1,4 @@
-import { Store } from '@/store';
+import { Store } from '@/graph/store';
 import { Connection } from './Connection';
 import type { TConnectionSchema } from './types';
 

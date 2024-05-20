@@ -1,4 +1,4 @@
-import { Store } from '@/store';
+import { Store } from '@/graph/store';
 import { Node } from './Node';
 import type { TNodeSchema } from './types';
 

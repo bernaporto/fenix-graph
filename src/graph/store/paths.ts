@@ -1,7 +1,9 @@
 const BasePath = {
   CONNECTIONS: 'connections',
-  NODES: 'nodes',
   LINKS: 'links',
+  LINK_IDS: 'linkIds',
+  NODES: 'nodes',
+  NODE_IDS: 'nodeIds',
   PORTS: 'ports',
 };
 
@@ -9,6 +11,8 @@ const join = (...parts: string[]) => parts.join('.');
 
 export const StorePath = {
   join,
+
+  paths: BasePath,
 
   connections: (linkId: string, connId: string, ...addPath: string[]) =>
     join(BasePath.LINKS, linkId, BasePath.CONNECTIONS, connId, ...addPath),

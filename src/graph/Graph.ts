@@ -1,6 +1,6 @@
 import { Link, Node } from '@/units';
 import { Registry } from '@/tools/Registry';
-import { Store } from '@/store';
+import { Store } from '@/graph/store';
 import { VirtualTree } from '@/tools/VirtualTree';
 import type { TLinkSchema, TNodeSchema } from '@/units';
 import type { TGraph, TGraphSnapshot } from './types';

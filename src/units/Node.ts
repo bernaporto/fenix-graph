@@ -1,5 +1,5 @@
 import { Registry, type TRegistry } from '@/tools/Registry';
-import { StorePath } from '@/store';
+import { StorePath } from '@/graph/store';
 import type { TPoint, TUnknownObject } from '@/types';
 import { uuidV4 } from '@/tools/uuid';
 import { Port } from './Port';
