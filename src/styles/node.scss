@@ -1,0 +1,30 @@
+.fnx-node {
+  @apply relative min-w-32 min-h-16;
+  @apply bg-gray-100 dark:bg-gray-800;
+  @apply border rounded-sm;
+  @apply border-gray-400 dark:border-gray-700;
+  @apply outline-1 outline-gray-500 hover:outline;
+  @apply shadow-lg;
+
+  &--selected {
+    @apply outline z-30;
+  }
+
+  &__container {
+    @apply absolute cursor-pointer;
+  }
+
+  &__header {
+    @apply w-full p-2 text-center;
+    @apply border-b border-gray-300 dark:border-gray-700;
+  }
+
+  &__title {
+    @apply uppercase font-bold text-2xs;
+    @apply text-primary-800 dark:text-primary-200;
+  }
+
+  &__body {
+    @apply flex flex-col;
+  }
+}

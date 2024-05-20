@@ -1,0 +1,17 @@
+.fnx-graph {
+  @apply fixed w-full h-full inset-0;
+  @apply bg-gray-200 dark:bg-gray-900;
+  @apply text-xs text-gray-600 dark:text-gray-400;
+
+  font-family: sans-serif;
+
+  &__container {
+    @apply relative w-full h-full;
+  }
+
+  &__content {
+    @apply absolute transform-gpu overflow-hidden;
+    @apply border border-gray-200 dark:border-gray-800;
+    @apply rounded-sm;
+  }
+}

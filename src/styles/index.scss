@@ -1,0 +1,17 @@
+@import './graph.scss';
+@import './link.scss';
+@import './node.scss';
+@import './port.scss';
+
+*,
+:before,
+:after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e0e0e0;
+}
+
+.fnx-draggable {
+  @apply absolute select-none;
+}

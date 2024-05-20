@@ -1,0 +1,21 @@
+.fnx-link {
+  @apply absolute w-full h-full z-10 pointer-events-none;
+
+  &__container {
+    @apply cursor-pointer;
+  }
+
+  &__path {
+    @apply fill-none stroke-[4px];
+    @apply stroke-current pointer-events-auto;
+    @apply text-gray-400 dark:text-gray-600;
+
+    &--hoverable {
+      @apply hover:text-gray-500 hover:stroke-[5px];
+    }
+
+    &--selected {
+      @apply text-gray-500 stroke-[5px];
+    }
+  }
+}
