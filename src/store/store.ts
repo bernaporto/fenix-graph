@@ -1,7 +1,15 @@
 import { FenixStore } from '@bernaporto/fenix-store';
-import type { TGraphState, TGraphStore } from './types';
+import type { TGraphStore } from './types';
+
+type TStoreConfig = { debug?: boolean };
 
 export const Store = {
-  create: (initialState?: TGraphState): TGraphStore =>
-    FenixStore.create(initialState),
+  create: (config?: TStoreConfig): TGraphStore =>
+    FenixStore.create(
+      {
+        nodes: {},
+        links: {},
+      },
+      { ...config, debugKey: 'FenixGraph' },
+    ),
 };

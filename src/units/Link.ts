@@ -1,7 +1,7 @@
 import type { TUnknownObject } from '@/types';
 import { Registry, type TRegistry } from '@/tools/Registry';
-import { uuidV4 } from '@/tools/uuid';
 import { StorePath } from '@/store';
+import { uuidV4 } from '@/tools/uuid';
 import { Connection } from './Connection';
 import type {
   TConnectionSchema,
