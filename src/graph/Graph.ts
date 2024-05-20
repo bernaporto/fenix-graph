@@ -1,14 +1,14 @@
-import { Link, type TLinkController, type TLinkSchema } from '@/units/Link';
-import { Node, type TNodeController, type TNodeSchema } from '@/units/Node';
+import { Link, Node } from '@/units';
 import { Registry } from '@/tools/Registry';
 import { Store } from '@/store';
 import { VirtualTree } from '@/tools/VirtualTree';
+import type { TLinkSchema, TNodeSchema } from '@/units';
 import type { TGraphController, TGraphSnapshot } from './types';
 
 /* Implementation */
 type TGraphFactoryConfig = {
-  initialLinks: TLinkController[];
-  initialNodes: TNodeController[];
+  initialLinks: Link[];
+  initialNodes: Node[];
 };
 
 const factory = ({
@@ -17,16 +17,16 @@ const factory = ({
 }: TGraphFactoryConfig): TGraphController => {
   const store = Store.create();
 
-  const nodes = Registry.create<TNodeSchema, TNodeController>({
+  const nodes = Registry.create<TNodeSchema, Node>({
     initialItems: initialNodes,
     onRemove: (node) => node.dispose(),
-    process: (schema) => Node.create({ schema, store }),
+    process: (schema) => new Node({ schema, store }),
   });
 
-  const links = Registry.create<TLinkSchema, TLinkController>({
+  const links = Registry.create<TLinkSchema, Link>({
     initialItems: initialLinks,
     onRemove: (link) => link.dispose(),
-    process: (schema) => Link.create({ schema, store }),
+    process: (schema) => new Link({ schema, store }),
   });
 
   return {
@@ -49,7 +49,7 @@ const factory = ({
       }
 
       // TODO: Implement proper tree configuration
-      return VirtualTree.create(Node.toSnapshot(root), () => []);
+      return VirtualTree.create(root.toSnapshot(), () => []);
     },
   };
 };
@@ -75,8 +75,8 @@ const toSnapshot = (controller: TGraphController): TGraphSnapshot => {
   const { nodes, links } = controller;
 
   return {
-    links: links.list().map(Link.toSnapshot),
-    nodes: nodes.list().map(Node.toSnapshot),
+    links: links.list().map((link) => link.toSnapshot()),
+    nodes: nodes.list().map((node) => node.toSnapshot()),
   };
 };
 

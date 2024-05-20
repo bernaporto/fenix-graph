@@ -1,3 +1,8 @@
-export { Graph, type TGraphController } from '../graph';
-export type { TNodeSchema, TNodeController } from './Node';
-export type { TLinkController } from './Link';
+export { Link } from './Link';
+export { Node } from './Node';
+export type {
+  TLinkSchema,
+  TLinkSnapshot,
+  TNodeSchema,
+  TNodeSnapshot,
+} from './types';
