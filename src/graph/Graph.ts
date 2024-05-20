@@ -6,26 +6,48 @@ import type { TLinkSchema, TNodeSchema } from '@/units';
 import type { TGraph, TGraphSnapshot } from './types';
 
 /* Implementation */
-type TGraphFactoryConfig = {
-  initialLinks: Link[];
-  initialNodes: Node[];
+type TGraphConfig = {
+  debug?: boolean;
+  onDispose?: VoidFunction;
+};
+
+type TGraphFactoryConfig = TGraphConfig & {
+  initialLinks?: Link[];
+  initialNodes?: Node[];
 };
 
 const factory = ({
-  initialNodes,
-  initialLinks,
+  debug,
+  onDispose,
+  initialNodes = [],
+  initialLinks = [],
 }: TGraphFactoryConfig): TGraph => {
-  const store = Store.create();
+  const store = Store.create({ debug });
+  const listeners = new Set<() => void>();
+
+  const emitChanged = () => {
+    listeners.forEach((listener) => listener());
+  };
 
   const nodes = Registry.create<TNodeSchema, Node>({
     initialItems: initialNodes,
-    onRemove: (node) => node.dispose(),
-    process: (schema) => new Node({ schema, store }),
+    onRemove: (node) => {
+      node.dispose();
+      emitChanged();
+    },
+    process: (schema) => {
+      const node = new Node({ schema, store });
+      emitChanged();
+      return node;
+    },
   });
 
   const links = Registry.create<TLinkSchema, Link>({
     initialItems: initialLinks,
-    onRemove: (link) => link.dispose(),
+    onRemove: (link) => {
+      link.dispose();
+      emitChanged();
+    },
     process: (schema) => new Link({ schema, store }),
   });
 
@@ -34,12 +56,25 @@ const factory = ({
     nodes,
 
     dispose: () => {
+      listeners.clear();
+      store.clear();
+
       // TODO: handle direct unit disposal
       links.list().forEach((link) => link.dispose());
       links.clear();
 
       nodes.list().forEach((node) => node.dispose());
       nodes.clear();
+
+      onDispose?.();
+    },
+
+    onChange: (listener) => {
+      listeners.add(listener);
+
+      return () => {
+        listeners.delete(listener);
+      };
     },
 
     tree: (rootId) => {
@@ -56,7 +91,7 @@ const factory = ({
 };
 
 /* Interfaces */
-const create = () => factory({ initialLinks: [], initialNodes: [] });
+const create = (config?: TGraphConfig) => factory({ ...config });
 
 const fromSnapshot = (snapshot: TGraphSnapshot): TGraph => {
   const store = Store.create();

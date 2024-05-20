@@ -74,6 +74,22 @@ describe('Graph', () => {
     expect(nullTree).toBeNull();
   });
 
+  it('should be able to listen to changes', () => {
+    const graph = Graph.create();
+    const listener = jest.fn();
+    const unsubscribe = graph.onChange(listener);
+
+    addSingleNode(graph);
+
+    expect(listener).toHaveBeenCalledTimes(1);
+
+    unsubscribe();
+
+    addSingleNode(graph);
+
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   describe('create', () => {
     it('should create a graph', () => {
       const graph = Graph.create();

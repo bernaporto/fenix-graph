@@ -19,5 +19,6 @@ export type TGraph = {
   links: Omit<TRegistry<TLinkSchema, Link>, 'clear'>;
   nodes: Omit<TRegistry<TNodeSchema, Node>, 'clear'>;
 } & {
+  onChange: (listener: VoidFunction) => VoidFunction;
   tree: (rootId: string) => TVirtualTree<TNodeSnapshot> | null;
 };
