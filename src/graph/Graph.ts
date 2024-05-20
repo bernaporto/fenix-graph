@@ -4,6 +4,7 @@ import { Store } from '@/graph/store';
 import { VirtualTree } from '@/tools/VirtualTree';
 import type { TLinkSchema, TNodeSchema } from '@/units';
 import type { TGraph, TGraphSnapshot } from './types';
+import { hookStore } from './utils/hookStore';
 
 /* Implementation */
 type TGraphConfig = {
@@ -51,9 +52,22 @@ const factory = ({
     process: (schema) => new Link({ schema, store }),
   });
 
+  const { linkIds, nodeIds } = hookStore(store);
+
   return {
     links,
     nodes,
+
+    store: {
+      linkIds: {
+        get: linkIds.get,
+        subscribe: linkIds.subscribe,
+      },
+      nodeIds: {
+        get: nodeIds.get,
+        subscribe: nodeIds.subscribe,
+      },
+    },
 
     dispose: () => {
       listeners.clear();

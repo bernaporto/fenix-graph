@@ -1,3 +1,4 @@
+import type { TStoreObservable } from '@bernaporto/fenix-store';
 import type {
   Link,
   Node,
@@ -14,8 +15,14 @@ export type TGraphSnapshot = {
   nodes: TNodeSnapshot[];
 };
 
+type TGraphUnitStore = {
+  linkIds: Pick<TStoreObservable<string[]>, 'get' | 'subscribe'>;
+  nodeIds: Pick<TStoreObservable<string[]>, 'get' | 'subscribe'>;
+};
+
 export type TGraph = {
   dispose: VoidFunction;
+  store: TGraphUnitStore;
   links: Omit<TRegistry<TLinkSchema, Link>, 'clear'>;
   nodes: Omit<TRegistry<TNodeSchema, Node>, 'clear'>;
 } & {
