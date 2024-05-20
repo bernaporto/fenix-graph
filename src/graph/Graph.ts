@@ -34,6 +34,7 @@ const factory = ({
     nodes,
 
     dispose: () => {
+      // TODO: handle direct unit disposal
       links.list().forEach((link) => link.dispose());
       links.clear();
 
